@@ -5,6 +5,7 @@ class MyPacket:
         self.sourceAddress = 0
         self.data = ''
         self.fcs = 0
+        self.data = []
 
     def packageFormation(self, sourceAddress, data):
         self.flag = ord('z') + 1  # Флаг (1 байт)
@@ -14,10 +15,14 @@ class MyPacket:
         self.dataBytes = self.data.encode('utf-8')
         self.fcs = 0  # FCS (1 байт, всегда нулевой)
 
+    def conversationPackageToBytes(self):
+        self.data = bytes([self.flag, self.destinationAddress, self.sourceAddress]) + self.dataBytes + bytes([self.fcs])
+
+        return self.data
+
     def byteStuffing(self):
-        data = bytes([self.flag, self.destinationAddress, self.sourceAddress]) + self.dataBytes + bytes([self.fcs])
         stuffedData = []
-        for byte in data:
+        for byte in self.data:
             if byte == 0x7E:
                 stuffedData.extend([0x7D, 0x5E])
             elif byte == 0x7D:
