@@ -76,8 +76,8 @@ class UserWindow:
         self.entry = tk.Entry(self.container)
         self.entry.pack(pady=(0, 5), anchor="w", fill="x")
 
-        validate = (self.window.register(self.validateAlphanumeric), "%P")
-        self.entry.config(validate="key", validatecommand=validate)
+        # validate = (self.window.register(self.validateAlphanumeric), "%P")
+        # self.entry.config(validate="key", validatecommand=validate)
 
         self.button = tk.Button(self.container, text="Отправить", command=self.sendButtonEvent)
         self.button.pack(pady=(0, 5), anchor="w")
