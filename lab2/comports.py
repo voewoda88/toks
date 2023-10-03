@@ -23,15 +23,26 @@ class ComPort:
 
 
     def comPortTexting(self, number, text):
+        self.counter += 1
+        self.logWindow.addLog("Группа пакетов: " + str(self.counter), "")
+        self.logWindow.addLog("", "")
         if number == 0:
             for char in text:
-                self.packet.packageFormation(self.firstPair - 1, char)
+                self.packet.packageFormation((self.firstPair * 2) - 2, char)
+                conversationPacket = self.packet.conversationPackageToBytes()
+                self.logWindow.addLog("Пакет до байт стаффинга: ", conversationPacket)
                 stuffedPacket = self.packet.byteStuffing()
+                self.logWindow.addLog("Пакет после байт стаффинга: ", stuffedPacket)
+                self.logWindow.addLog("", "")
                 self.serSender1.write(stuffedPacket)
         else:
             for char in text:
-                self.packet.packageFormation(self.secondPair - 1, char)
+                self.packet.packageFormation((self.secondPair * 2) - 2, char)
+                conversationPacket = self.packet.conversationPackageToBytes()
+                self.logWindow.addLog("Пакет до байт стаффинга: ", conversationPacket)
                 stuffedPacket = self.packet.byteStuffing()
+                self.logWindow.addLog("Пакет после байт стаффинга: ", stuffedPacket)
+                self.logWindow.addLog("", "")
                 self.serSender2.write(stuffedPacket)
 
 
@@ -81,9 +92,11 @@ class ComPort:
                 self.serReciever2 = serial.Serial(globalVariables.serialPortReciever4, baudrate=9600, timeout=1,
                                                   parity=parity)
 
-    def __init__(self):
+    def __init__(self, logWindow):
         self.firstPair = None
         self.secondPair = None
+        self.counter = 0
+        self.logWindow = logWindow
         self.packet = MyPacket()
 
         self.firstPair = random.randint(1, 4)
